@@ -1,5 +1,5 @@
-// Hybrid CTFd API Integration - Real API with fallback to mock data
-const CTFD_BASE_URL = '/api/ctfd';
+// Direct CTFd API Integration - Direct access to external API
+const CTFD_BASE_URL = 'http://ethics.golomtbank.com/api/v1';
 
 // Types
 export interface CTFdUser {
@@ -48,10 +48,10 @@ export interface ApiResponse<T> {
 }
 
 
-// Core API function - Fetch real data from API
+// Core API function - Direct access to external API
 async function fetchFromCTFd<T>(endpoint: string): Promise<ApiResponse<T>> {
   try {
-    const response = await fetch(`${CTFD_BASE_URL}?endpoint=${encodeURIComponent(endpoint)}`, {
+    const response = await fetch(`${CTFD_BASE_URL}${endpoint}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
