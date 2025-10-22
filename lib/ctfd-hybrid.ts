@@ -56,6 +56,7 @@ async function fetchFromCTFd<T>(endpoint: string): Promise<ApiResponse<T>> {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
+        'Cookie': 'session=55751fe3-d0d8-48e2-bae0-d9c5f090d5c0.OITgSjaN-RYThPPtTcTvWxXG0js; __next_hmr_refresh_hash__=213a83fa580598a506a04fe99b71dc60633457081244afec',
       },
     });
 
