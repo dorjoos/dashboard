@@ -1,5 +1,5 @@
 // Hybrid CTFd API Integration - Real API with fallback to mock data
-const CTFD_BASE_URL = '/api/ctfd';
+const CTFD_BASE_URL = 'http://ethics.golomtbank.com/api/v1';
 
 // Types
 export interface CTFdUser {
