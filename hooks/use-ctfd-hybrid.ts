@@ -1,22 +1,24 @@
-"use client";
-
 import { useState, useEffect } from 'react';
-import { CTFdTeam, CTFdChallenge, getTeamsRanked4to13, getTop3Teams, getAllChallenges, getAwardsData } from '@/lib/ctfd-api';
+import { 
+  getTop3Teams, 
+  getTeamsRanked4to13, 
+  getAllChallenges, 
+  getAwardsData 
+} from '@/lib/ctfd-hybrid';
 
-export interface UseCTFdDataReturn {
-  top3Teams: CTFdTeam[];
-  teams: CTFdTeam[];
-  challenges: CTFdChallenge[];
+export interface CTFdData {
+  top3Teams: any[];
+  teamsRanked4to13: any[];
+  challenges: any[];
   awards: any[];
   loading: boolean;
   error: string | null;
-  refetch: () => Promise<void>;
 }
 
-export function useCTFdData(): UseCTFdDataReturn {
-  const [top3Teams, setTop3Teams] = useState<CTFdTeam[]>([]);
-  const [teams, setTeams] = useState<CTFdTeam[]>([]);
-  const [challenges, setChallenges] = useState<CTFdChallenge[]>([]);
+export function useCTFdHybrid(): CTFdData {
+  const [top3Teams, setTop3Teams] = useState<any[]>([]);
+  const [teamsRanked4to13, setTeamsRanked4to13] = useState<any[]>([]);
+  const [challenges, setChallenges] = useState<any[]>([]);
   const [awards, setAwards] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -26,8 +28,8 @@ export function useCTFdData(): UseCTFdDataReturn {
       setLoading(true);
       setError(null);
 
-      // Fetch top 3 teams, teams 4-13, challenges, and awards in parallel
-      const [top3Data, teamsData, challengesData, awardsData] = await Promise.all([
+      // Fetch all data in parallel
+      const [top3Data, teams4to13Data, challengesData, awardsData] = await Promise.all([
         getTop3Teams(),
         getTeamsRanked4to13(),
         getAllChallenges(),
@@ -35,7 +37,7 @@ export function useCTFdData(): UseCTFdDataReturn {
       ]);
 
       setTop3Teams(top3Data);
-      setTeams(teamsData);
+      setTeamsRanked4to13(teams4to13Data);
       setChallenges(challengesData);
       setAwards(awardsData);
     } catch (err) {
@@ -48,20 +50,19 @@ export function useCTFdData(): UseCTFdDataReturn {
 
   useEffect(() => {
     fetchData();
-    
+
     // Set up polling every 30 seconds
     const interval = setInterval(fetchData, 30000);
-    
+
     return () => clearInterval(interval);
   }, []);
 
   return {
     top3Teams,
-    teams,
+    teamsRanked4to13,
     challenges,
     awards,
     loading,
-    error,
-    refetch: fetchData
+    error
   };
 }

@@ -6,14 +6,7 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  async rewrites() {
-    return [
-      {
-        source: '/api/ctfd/:path*',
-        destination: 'http://ethics.golomtbank.com/api/v1/:path*',
-      },
-    ]
-  },
+  serverExternalPackages: [],
 }
 
 export default nextConfig

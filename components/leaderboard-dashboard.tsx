@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Shield, Trophy, Zap, Lock, Terminal, Activity, RefreshCw, AlertCircle } from "lucide-react"
-import { useCTFdData } from "@/hooks/use-ctfd-data"
+import { useCTFdHybrid } from "@/hooks/use-ctfd-hybrid"
 import { Button } from "@/components/ui/button"
 
 const recentActivity = [
@@ -15,7 +15,7 @@ const recentActivity = [
 ]
 
 export function LeaderboardDashboard() {
-  const { top3Teams, teams, challenges, awards, loading, error, refetch } = useCTFdData();
+  const { top3Teams, teamsRanked4to13, challenges, awards, loading, error } = useCTFdHybrid();
 
   return (
     <div className="min-h-screen bg-background grid-pattern relative overflow-hidden">
@@ -42,12 +42,12 @@ export function LeaderboardDashboard() {
               </Badge>
               <Badge variant="outline" className="border-accent text-accent font-mono">
                 <Terminal className="h-3 w-3 mr-1" />
-                ACTIVE: {teams.length > 0 ? teams.length + 3 : '...'}
+                ACTIVE: {teamsRanked4to13.length > 0 ? teamsRanked4to13.length + 3 : '...'}
               </Badge>
               <Button
                 variant="outline"
                 size="sm"
-                onClick={refetch}
+                onClick={() => window.location.reload()}
                 disabled={loading}
                 className="font-mono"
               >
@@ -96,7 +96,7 @@ export function LeaderboardDashboard() {
               <div className="space-y-3">
                 <div className="flex justify-between items-center p-3 rounded bg-secondary/30">
                   <span className="text-sm font-mono text-muted-foreground">Teams 4-13</span>
-                  <span className="font-bold font-mono text-foreground">{teams.length}</span>
+                  <span className="font-bold font-mono text-foreground">{teamsRanked4to13.length}</span>
                 </div>
                 <div className="flex justify-between items-center p-3 rounded bg-secondary/30">
                   <span className="text-sm font-mono text-muted-foreground">Total Challenges</span>
@@ -109,13 +109,13 @@ export function LeaderboardDashboard() {
                 <div className="flex justify-between items-center p-3 rounded bg-secondary/30">
                   <span className="text-sm font-mono text-muted-foreground">Total Solves</span>
                   <span className="font-bold font-mono text-accent">
-                    {teams.reduce((sum, team) => sum + team.solves, 0)}
+                    {teamsRanked4to13.reduce((sum, team) => sum + team.solves, 0)}
                   </span>
                 </div>
                 <div className="flex justify-between items-center p-3 rounded bg-secondary/30">
                   <span className="text-sm font-mono text-muted-foreground">Avg Score</span>
                   <span className="font-bold font-mono text-destructive">
-                    {teams.length > 0 ? Math.round(teams.reduce((sum, team) => sum + team.score, 0) / teams.length) : 0}
+                    {teamsRanked4to13.length > 0 ? Math.round(teamsRanked4to13.reduce((sum, team) => sum + team.score, 0) / teamsRanked4to13.length) : 0}
                   </span>
                 </div>
               </div>
@@ -324,7 +324,7 @@ export function LeaderboardDashboard() {
               </div>
             ) : (
               <div className="space-y-3">
-                {teams.map((team, index) => (
+                {teamsRanked4to13.map((team, index) => (
                   <div
                     key={team.id}
                     className="flex items-center gap-4 p-4 rounded-lg bg-secondary/50 hover:bg-secondary/70 transition-all"
@@ -351,7 +351,7 @@ export function LeaderboardDashboard() {
                   </div>
                 ))}
                 
-                {teams.length === 0 && !loading && (
+                {teamsRanked4to13.length === 0 && !loading && (
                   <div className="text-center py-8">
                     <p className="text-muted-foreground font-mono">No teams found in rankings 4-13</p>
                   </div>

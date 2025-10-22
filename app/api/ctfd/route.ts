@@ -1,22 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const CTFD_BASE_URL = 'http://ethics.golomtbank.com';
+const CTFD_BASE_URL = 'http://ethics.golomtbank.com/api/v1';
 const CTFD_TOKEN = 'ctfd_baac942af8073819f03340b1d2f96b37266c01040bcc118c04e9c05cdedab664';
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { path: string[] } }
-) {
+export async function GET(request: NextRequest) {
   try {
-    const path = params.path.join('/');
-    const url = `${CTFD_BASE_URL}/api/v1/${path}`;
+    const { searchParams } = new URL(request.url);
+    const endpoint = searchParams.get('endpoint') || '/users';
     
-    // Get query parameters from the request
-    const searchParams = request.nextUrl.searchParams;
-    const queryString = searchParams.toString();
-    const fullUrl = queryString ? `${url}?${queryString}` : url;
-
-    const response = await fetch(fullUrl, {
+    const response = await fetch(`${CTFD_BASE_URL}${endpoint}`, {
       method: 'GET',
       headers: {
         'Authorization': `Token ${CTFD_TOKEN}`,
@@ -35,7 +27,7 @@ export async function GET(
 
     return NextResponse.json(data);
   } catch (error) {
-    console.error('Proxy error:', error);
+    console.error('API error:', error);
     return NextResponse.json(
       { error: 'Failed to fetch data from CTFd API' },
       { status: 500 }
