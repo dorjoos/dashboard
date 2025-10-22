@@ -11,8 +11,8 @@ export async function GET(request: NextRequest) {
     const response = await fetch(`${CTFD_BASE_URL}${endpoint}`, {
       method: 'GET',
       headers: {
-        'Authorization': `Token ${CTFD_TOKEN}`,
         'Content-Type': 'application/json',
+        'Authorization': 'Token ' + CTFD_TOKEN
       },
     });
 
