@@ -1,5 +1,5 @@
-// Direct CTFd API Integration - Direct access to external API
-const CTFD_BASE_URL = 'http://ethics.golomtbank.com/api/v1';
+// CTFd API Integration - Using proxy to handle CORS
+const CTFD_BASE_URL = '/api/ctfd';
 
 // Types
 export interface CTFdUser {
@@ -48,15 +48,14 @@ export interface ApiResponse<T> {
 }
 
 
-// Core API function - Direct access to external API
+// Core API function - Using proxy to handle CORS
 async function fetchFromCTFd<T>(endpoint: string): Promise<ApiResponse<T>> {
   try {
-    const response = await fetch(`${CTFD_BASE_URL}${endpoint}`, {
+    const response = await fetch(`${CTFD_BASE_URL}?endpoint=${encodeURIComponent(endpoint)}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Cookie': 'session=55751fe3-d0d8-48e2-bae0-d9c5f090d5c0.OITgSjaN-RYThPPtTcTvWxXG0js; __next_hmr_refresh_hash__=213a83fa580598a506a04fe99b71dc60633457081244afec',
       },
     });
 
