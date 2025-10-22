@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const CTFD_BASE_URL = 'http://ethics.golomtbank.com/api/v1';
+const CTFD_BASE_URL = 'http://ethics.golomtbank.com:8001/api/v1';
 const CTFD_TOKEN = 'ctfd_baac942af8073819f03340b1d2f96b37266c01040bcc118c04e9c05cdedab664';
 
 export async function GET(request: NextRequest) {

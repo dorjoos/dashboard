@@ -1,5 +1,5 @@
 // Hybrid CTFd API Integration - Real API with fallback to mock data
-const CTFD_BASE_URL = 'http://ethics.golomtbank.com/api/v1';
+const CTFD_BASE_URL = '/api/ctfd';
 
 // Types
 export interface CTFdUser {
@@ -78,9 +78,15 @@ const mockAwards: CTFdAward[] = [
   { id: 3, name: "Persistence", description: "Most attempts", category: "achievement", value: 25, team_id: 3, user_id: 3 },
 ];
 
-// Core API function - Try real API first, fallback to mock data
+// Core API function - Use mock data for now (external API has auth issues)
 async function fetchFromCTFd<T>(endpoint: string): Promise<ApiResponse<T>> {
   try {
+    // For now, always use mock data since external API has authentication issues
+    console.log(`Using mock data for ${endpoint}`);
+    return getMockData<T>(endpoint);
+    
+    // Uncomment below when external API is working:
+    /*
     const response = await fetch(`${CTFD_BASE_URL}?endpoint=${encodeURIComponent(endpoint)}`, {
       method: 'GET',
       headers: {
@@ -98,6 +104,7 @@ async function fetchFromCTFd<T>(endpoint: string): Promise<ApiResponse<T>> {
     }
     
     return { success: true, data };
+    */
   } catch (error) {
     console.warn(`Error fetching ${endpoint}, using mock data:`, error);
     return getMockData<T>(endpoint);
