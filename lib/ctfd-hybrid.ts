@@ -152,8 +152,47 @@ export async function getAllTeams(): Promise<CTFdTeam[]> {
 }
 
 export async function getTop3Teams(): Promise<CTFdTeam[]> {
-  const allTeams = await getAllTeams();
-  return allTeams.slice(0, 3);
+  try {
+    // Try to fetch from the specific top 3 endpoint first
+    const response = await fetchFromCTFd<any>('/scoreboard/top/3');
+    
+    if (response.success && response.data) {
+      // Convert the object format to array format
+      const top3Data = response.data;
+      const teams: CTFdTeam[] = [];
+      
+      // Extract teams from the object (keys are positions: "1", "2", "3")
+      for (const position in top3Data) {
+        if (top3Data.hasOwnProperty(position)) {
+          const teamData = top3Data[position];
+          teams.push({
+            id: teamData.id,
+            name: teamData.name,
+            score: teamData.score,
+            solves: teamData.solves ? teamData.solves.length : 0,
+            place: parseInt(position),
+            members: [] // Top 3 endpoint doesn't provide member details
+          });
+        }
+      }
+      
+      // Sort by position to ensure correct order
+      teams.sort((a, b) => a.place - b.place);
+      
+      if (teams.length > 0) {
+        return teams;
+      }
+    }
+
+    // Fallback to getting all teams and taking top 3
+    const allTeams = await getAllTeams();
+    return allTeams.slice(0, 3);
+  } catch (error) {
+    console.error('Error fetching top 3 teams:', error);
+    // Fallback to getting all teams and taking top 3
+    const allTeams = await getAllTeams();
+    return allTeams.slice(0, 3);
+  }
 }
 
 export async function getTeamsRanked4to13(): Promise<CTFdTeam[]> {
